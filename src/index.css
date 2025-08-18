@@ -2,39 +2,67 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Definition of the design system. All colors, gradients, fonts, etc should be defined here. 
-All colors MUST be HSL.
-*/
+/* Marriage Compatibility Assessment Design System */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
 
 @layer base {
   :root {
-    --background: 0 0% 100%;
-    --foreground: 222.2 84% 4.9%;
+    --background: 210 20% 98%;
+    --foreground: 214 32% 14%;
 
     --card: 0 0% 100%;
-    --card-foreground: 222.2 84% 4.9%;
+    --card-foreground: 214 32% 14%;
 
     --popover: 0 0% 100%;
-    --popover-foreground: 222.2 84% 4.9%;
+    --popover-foreground: 214 32% 14%;
 
-    --primary: 222.2 47.4% 11.2%;
+    --primary: 214 84% 26%;
     --primary-foreground: 210 40% 98%;
+    --primary-light: 214 84% 35%;
+    --primary-lighter: 214 54% 85%;
 
-    --secondary: 210 40% 96.1%;
-    --secondary-foreground: 222.2 47.4% 11.2%;
+    --secondary: 210 40% 96%;
+    --secondary-foreground: 214 32% 14%;
 
-    --muted: 210 40% 96.1%;
-    --muted-foreground: 215.4 16.3% 46.9%;
+    --muted: 210 40% 95%;
+    --muted-foreground: 215 16% 47%;
 
-    --accent: 210 40% 96.1%;
-    --accent-foreground: 222.2 47.4% 11.2%;
+    --accent: 214 54% 85%;
+    --accent-foreground: 214 32% 14%;
 
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 210 40% 98%;
+    --success: 142 71% 45%;
+    --success-foreground: 0 0% 100%;
+    --success-light: 142 76% 89%;
 
-    --border: 214.3 31.8% 91.4%;
-    --input: 214.3 31.8% 91.4%;
-    --ring: 222.2 84% 4.9%;
+    --warning: 48 96% 53%;
+    --warning-foreground: 0 0% 0%;
+    --warning-light: 48 100% 92%;
+
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 100%;
+    --destructive-light: 0 100% 95%;
+
+    --border: 214 32% 91%;
+    --input: 214 32% 91%;
+    --ring: 214 84% 26%;
+
+    /* Assessment specific colors */
+    --compatibility-green: 142 71% 45%;
+    --compatibility-yellow: 48 96% 53%;
+    --compatibility-red: 0 84% 60%;
+    --compatibility-gray: 220 9% 46%;
+
+    /* Gradients */
+    --gradient-hero: linear-gradient(135deg, hsl(214 84% 26%), hsl(214 84% 35%));
+    --gradient-card: linear-gradient(145deg, hsl(0 0% 100%), hsl(210 40% 98%));
+    --gradient-success: linear-gradient(135deg, hsl(142 71% 45%), hsl(142 71% 55%));
+
+    /* Shadows */
+    --shadow-card: 0 4px 6px -1px hsl(214 32% 14% / 0.1), 0 2px 4px -1px hsl(214 32% 14% / 0.06);
+    --shadow-lg: 0 10px 15px -3px hsl(214 32% 14% / 0.1), 0 4px 6px -2px hsl(214 32% 14% / 0.05);
+    --shadow-glow: 0 0 0 1px hsl(214 84% 26% / 0.1), 0 1px 0 0 hsl(214 84% 26% / 0.1);
+
+    --radius: 0.75rem;
 
     --radius: 0.5rem;
 
@@ -100,6 +128,68 @@ All colors MUST be HSL.
   }
 
   body {
-    @apply bg-background text-foreground;
+    @apply bg-background text-foreground font-inter antialiased;
+  }
+
+  .font-inter {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+  }
+}
+
+@layer components {
+  .gradient-hero {
+    background: var(--gradient-hero);
+  }
+
+  .gradient-card {
+    background: var(--gradient-card);
+  }
+
+  .shadow-card {
+    box-shadow: var(--shadow-card);
+  }
+
+  .shadow-lg-custom {
+    box-shadow: var(--shadow-lg);
+  }
+
+  .shadow-glow {
+    box-shadow: var(--shadow-glow);
+  }
+
+  .compatibility-green {
+    color: hsl(var(--compatibility-green));
+  }
+
+  .compatibility-yellow {
+    color: hsl(var(--compatibility-yellow));
+  }
+
+  .compatibility-red {
+    color: hsl(var(--compatibility-red));
+  }
+
+  .bg-compatibility-green {
+    background-color: hsl(var(--compatibility-green));
+  }
+
+  .bg-compatibility-yellow {
+    background-color: hsl(var(--compatibility-yellow));
+  }
+
+  .bg-compatibility-red {
+    background-color: hsl(var(--compatibility-red));
+  }
+
+  .bg-compatibility-green-light {
+    background-color: hsl(var(--success-light));
+  }
+
+  .bg-compatibility-yellow-light {
+    background-color: hsl(var(--warning-light));
+  }
+
+  .bg-compatibility-red-light {
+    background-color: hsl(var(--destructive-light));
   }
 }
