@@ -1,6 +1,7 @@
 import jsPDF from 'jspdf';
 import { PartnerData, AssessmentResponse } from '@/components/AssessmentResults';
 import { assessmentQuestions, assessmentCategories, importanceLabels, flexibilityLabels } from '@/data/assessmentQuestions';
+import { generateQualityOfLifeAnalysis, QualityOfLifeReport } from '@/utils/qualityOfLifeAnalysis';
 
 const getCompatibilityScore = (responseA: AssessmentResponse, responseB: AssessmentResponse) => {
   const importanceGap = Math.abs(responseA.importance - responseB.importance);
@@ -226,4 +227,166 @@ export const generatePDFReport = (partnerA: PartnerData, partnerB: PartnerData):
 
   // Save the PDF
   pdf.save(`Marriage-Compatibility-Report-${partnerA.name}-${partnerB.name}.pdf`);
+};
+
+export const generateSinglePartnerPDF = (partner: PartnerData): void => {
+  const pdf = new jsPDF();
+  let yPosition = 20;
+  const pageHeight = pdf.internal.pageSize.height;
+  const margin = 20;
+
+  // Helper function to check if we need a new page
+  const checkNewPage = (additionalHeight: number) => {
+    if (yPosition + additionalHeight > pageHeight - margin) {
+      pdf.addPage();
+      yPosition = 20;
+    }
+  };
+
+  const qualityAnalysis = generateQualityOfLifeAnalysis(partner.responses);
+
+  // Cover Page
+  pdf.setFontSize(24);
+  pdf.setTextColor(33, 66, 99); // Primary color
+  pdf.text('Quality of Life Assessment Report', 20, yPosition);
+  yPosition += 20;
+
+  pdf.setFontSize(16);
+  pdf.setTextColor(0, 0, 0);
+  pdf.text(`${partner.name}`, 20, yPosition);
+  yPosition += 10;
+
+  pdf.setFontSize(12);
+  pdf.setTextColor(100, 100, 100);
+  pdf.text(`Generated: ${new Date().toLocaleDateString()}`, 20, yPosition);
+  yPosition += 30;
+
+  // Overall Score
+  checkNewPage(50);
+  pdf.setFontSize(18);
+  pdf.setTextColor(33, 66, 99);
+  pdf.text('Overall Life Readiness Score', 20, yPosition);
+  yPosition += 15;
+
+  pdf.setFontSize(32);
+  pdf.setTextColor(0, 128, 0);
+  pdf.text(`${Math.round(qualityAnalysis.overallScore * 20)}%`, 20, yPosition);
+  yPosition += 20;
+
+  // Personality Profile
+  checkNewPage(40);
+  pdf.setFontSize(16);
+  pdf.setTextColor(33, 66, 99);
+  pdf.text('Personality Profile', 20, yPosition);
+  yPosition += 15;
+
+  pdf.setFontSize(10);
+  pdf.setTextColor(0, 0, 0);
+  const profileLines = pdf.splitTextToSize(qualityAnalysis.personalityProfile, 170);
+  profileLines.forEach((line: string) => {
+    checkNewPage(8);
+    pdf.text(line, 20, yPosition);
+    yPosition += 6;
+  });
+  yPosition += 10;
+
+  // Relationship Readiness
+  checkNewPage(40);
+  pdf.setFontSize(16);
+  pdf.setTextColor(33, 66, 99);
+  pdf.text('Relationship Readiness', 20, yPosition);
+  yPosition += 15;
+
+  pdf.setFontSize(10);
+  pdf.setTextColor(0, 0, 0);
+  const readinessLines = pdf.splitTextToSize(qualityAnalysis.relationshipReadiness, 170);
+  readinessLines.forEach((line: string) => {
+    checkNewPage(8);
+    pdf.text(line, 20, yPosition);
+    yPosition += 6;
+  });
+  yPosition += 10;
+
+  // Strengths
+  checkNewPage(40);
+  pdf.setFontSize(16);
+  pdf.setTextColor(0, 128, 0);
+  pdf.text('Top Strengths', 20, yPosition);
+  yPosition += 15;
+
+  pdf.setFontSize(10);
+  pdf.setTextColor(0, 0, 0);
+  qualityAnalysis.strengths.forEach(strength => {
+    checkNewPage(8);
+    pdf.text(`• ${strength}`, 25, yPosition);
+    yPosition += 6;
+  });
+  yPosition += 10;
+
+  // Growth Areas
+  checkNewPage(40);
+  pdf.setFontSize(16);
+  pdf.setTextColor(255, 165, 0);
+  pdf.text('Growth Areas', 20, yPosition);
+  yPosition += 15;
+
+  pdf.setFontSize(10);
+  pdf.setTextColor(0, 0, 0);
+  qualityAnalysis.growthAreas.forEach(area => {
+    checkNewPage(8);
+    pdf.text(`• ${area}`, 25, yPosition);
+    yPosition += 6;
+  });
+  yPosition += 15;
+
+  // Category Analysis
+  checkNewPage(50);
+  pdf.setFontSize(18);
+  pdf.setTextColor(33, 66, 99);
+  pdf.text('Detailed Category Analysis', 20, yPosition);
+  yPosition += 15;
+
+  qualityAnalysis.categoryInsights.forEach(insight => {
+    checkNewPage(30);
+    
+    pdf.setFontSize(14);
+    pdf.setTextColor(33, 66, 99);
+    pdf.text(insight.category, 20, yPosition);
+    
+    pdf.setFontSize(10);
+    pdf.setTextColor(0, 0, 0);
+    pdf.text(`Score: ${Math.round(insight.score * 20)}% (${insight.level})`, 130, yPosition);
+    yPosition += 10;
+
+    // Insights
+    insight.insights.forEach(insightText => {
+      checkNewPage(8);
+      const lines = pdf.splitTextToSize(`• ${insightText}`, 170);
+      lines.forEach((line: string) => {
+        pdf.text(line, 25, yPosition);
+        yPosition += 6;
+      });
+    });
+
+    // Recommendations
+    insight.recommendations.forEach(recommendation => {
+      checkNewPage(8);
+      const lines = pdf.splitTextToSize(`→ ${recommendation}`, 170);
+      lines.forEach((line: string) => {
+        pdf.text(line, 25, yPosition);
+        yPosition += 6;
+      });
+    });
+    
+    yPosition += 10;
+  });
+
+  // Footer
+  pdf.setFontSize(8);
+  pdf.setTextColor(100, 100, 100);
+  const footerText = 'Marriage Compatibility Master Assessment - Quality of Life Report';
+  pdf.text(footerText, 20, pageHeight - 10);
+
+  // Save the PDF
+  pdf.save(`Quality-of-Life-Report-${partner.name}.pdf`);
 };

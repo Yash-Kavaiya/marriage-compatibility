@@ -1,12 +1,13 @@
 import { useState } from 'react';
 import AssessmentLanding from '@/components/AssessmentLanding';
 import QuestionCard from '@/components/QuestionCard';
+import VoiceAssessment from '@/components/VoiceAssessment';
 import AssessmentResults, { PartnerData, AssessmentResponse } from '@/components/AssessmentResults';
 import { assessmentQuestions } from '@/data/assessmentQuestions';
-import { generatePDFReport } from '@/utils/pdfGenerator';
+import { generatePDFReport, generateSinglePartnerPDF } from '@/utils/pdfGenerator';
 import { useToast } from '@/hooks/use-toast';
 
-type AppState = 'landing' | 'assessment' | 'results';
+type AppState = 'landing' | 'assessment' | 'voice-assessment' | 'results';
 type PartnerType = 'A' | 'B' | null;
 
 const Index = () => {
@@ -16,9 +17,10 @@ const Index = () => {
   const [responses, setResponses] = useState<AssessmentResponse[]>([]);
   const [partnerAData, setPartnerAData] = useState<PartnerData | undefined>();
   const [partnerBData, setPartnerBData] = useState<PartnerData | undefined>();
+  const [assessmentType, setAssessmentType] = useState<'regular' | 'voice'>('regular');
   const { toast } = useToast();
 
-  const startAssessment = (partner: 'A' | 'B') => {
+  const startAssessment = (partner: 'A' | 'B', type: 'regular' | 'voice' = 'regular') => {
     const partnerName = prompt(`Enter ${partner === 'A' ? 'Partner A' : 'Partner B'}'s name:`);
     if (!partnerName?.trim()) {
       toast({
@@ -32,7 +34,8 @@ const Index = () => {
     setCurrentPartner(partner);
     setCurrentQuestionIndex(0);
     setResponses([]);
-    setAppState('assessment');
+    setAssessmentType(type);
+    setAppState(type === 'voice' ? 'voice-assessment' : 'assessment');
   };
 
   const handleResponseChange = (questionId: number, field: 'importance' | 'flexibility', value: number) => {
@@ -123,8 +126,59 @@ const Index = () => {
     }
   };
 
+  const downloadSinglePartnerPDF = (partnerData: PartnerData) => {
+    try {
+      generateSinglePartnerPDF(partnerData);
+      toast({
+        title: "Individual Report Generated!",
+        description: `${partnerData.name}'s quality of life report has been downloaded successfully.`,
+      });
+    } catch (error) {
+      toast({
+        title: "PDF Generation Failed",
+        description: "There was an error generating the report. Please try again.",
+        variant: "destructive",
+      });
+    }
+  };
+
+  const handleVoiceAssessmentComplete = (voiceResponses: AssessmentResponse[]) => {
+    const partnerName = prompt(`Confirm ${currentPartner === 'A' ? 'Partner A' : 'Partner B'}'s name:`);
+    if (!partnerName?.trim()) return;
+
+    const completedData: PartnerData = {
+      name: partnerName,
+      responses: voiceResponses,
+      completedAt: new Date()
+    };
+
+    if (currentPartner === 'A') {
+      setPartnerAData(completedData);
+    } else {
+      setPartnerBData(completedData);
+    }
+
+    setAppState('results');
+    setCurrentPartner(null);
+    
+    toast({
+      title: "Voice Assessment Complete!",
+      description: `${partnerName}'s assessment has been saved successfully.`,
+    });
+  };
+
   if (appState === 'landing') {
     return <AssessmentLanding onStartAssessment={startAssessment} />;
+  }
+
+  if (appState === 'voice-assessment' && currentPartner) {
+    return (
+      <VoiceAssessment
+        onComplete={handleVoiceAssessmentComplete}
+        onCancel={() => setAppState('landing')}
+        partnerType={currentPartner}
+      />
+    );
   }
 
   if (appState === 'assessment' && currentPartner) {
@@ -154,6 +208,7 @@ const Index = () => {
       partnerB={partnerBData}
       onRestart={restartAssessment}
       onDownloadPDF={downloadPDF}
+      onDownloadSinglePartnerPDF={downloadSinglePartnerPDF}
     />
   );
 };

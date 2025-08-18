@@ -2,8 +2,9 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
-import { Download, RefreshCw, Target, AlertTriangle, CheckCircle } from "lucide-react";
+import { Download, RefreshCw, Target, AlertTriangle, CheckCircle, FileText, User } from "lucide-react";
 import { assessmentCategories, assessmentQuestions } from "@/data/assessmentQuestions";
+import { generateQualityOfLifeAnalysis } from "@/utils/qualityOfLifeAnalysis";
 
 export interface AssessmentResponse {
   questionId: number;
@@ -22,6 +23,7 @@ interface AssessmentResultsProps {
   partnerB?: PartnerData;
   onRestart: () => void;
   onDownloadPDF: () => void;
+  onDownloadSinglePartnerPDF: (partnerData: PartnerData) => void;
 }
 
 const getCompatibilityScore = (responseA: AssessmentResponse, responseB: AssessmentResponse) => {
@@ -128,15 +130,88 @@ const CategorySummary = ({
   );
 };
 
+const SinglePartnerSummary = ({ 
+  partner, 
+  onDownloadPDF 
+}: { 
+  partner: PartnerData;
+  onDownloadPDF: (partner: PartnerData) => void;
+}) => {
+  const qualityAnalysis = generateQualityOfLifeAnalysis(partner.responses);
+  
+  return (
+    <Card className="shadow-lg border-primary bg-gradient-to-br from-white to-primary-lighter/20">
+      <CardHeader>
+        <CardTitle className="text-2xl text-center">Quality of Life Analysis for {partner.name}</CardTitle>
+      </CardHeader>
+      <CardContent className="space-y-6">
+        <div className="text-center">
+          <div className="text-4xl font-bold text-primary mb-2">
+            {Math.round(qualityAnalysis.overallScore * 20)}%
+          </div>
+          <p className="text-muted-foreground">Overall Life Readiness Score</p>
+        </div>
+        
+        <Progress value={qualityAnalysis.overallScore * 20} className="h-4" />
+        
+        <div className="bg-white p-4 rounded-lg">
+          <h4 className="font-semibold mb-2">Personality Profile:</h4>
+          <p className="text-sm text-muted-foreground">{qualityAnalysis.personalityProfile}</p>
+        </div>
+        
+        <div className="bg-white p-4 rounded-lg">
+          <h4 className="font-semibold mb-2">Relationship Readiness:</h4>
+          <p className="text-sm text-muted-foreground">{qualityAnalysis.relationshipReadiness}</p>
+        </div>
+        
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="bg-success-light p-4 rounded-lg">
+            <h4 className="font-semibold mb-2 text-success">Top Strengths</h4>
+            <ul className="text-sm space-y-1">
+              {qualityAnalysis.strengths.slice(0, 3).map((strength, index) => (
+                <li key={index} className="flex items-center">
+                  <CheckCircle className="w-3 h-3 text-success mr-1" />
+                  {strength}
+                </li>
+              ))}
+            </ul>
+          </div>
+          
+          <div className="bg-warning-light p-4 rounded-lg">
+            <h4 className="font-semibold mb-2 text-warning-foreground">Growth Areas</h4>
+            <ul className="text-sm space-y-1">
+              {qualityAnalysis.growthAreas.slice(0, 3).map((area, index) => (
+                <li key={index} className="flex items-center">
+                  <Target className="w-3 h-3 text-warning mr-1" />
+                  {area}
+                </li>
+              ))}
+            </ul>
+          </div>
+        </div>
+        
+        <Button 
+          onClick={() => onDownloadPDF(partner)} 
+          className="w-full gradient-romantic"
+        >
+          <FileText className="w-4 h-4 mr-2" />
+          Download Individual Quality Report
+        </Button>
+      </CardContent>
+    </Card>
+  );
+};
+
 const OverallSummary = ({ 
   partnerA, 
-  partnerB 
+  partnerB,
+  onDownloadSinglePartnerPDF
 }: { 
   partnerA?: PartnerData;
   partnerB?: PartnerData;
+  onDownloadSinglePartnerPDF: (partner: PartnerData) => void;
 }) => {
-  if (!partnerA || !partnerB) {
-    const completedPartner = partnerA || partnerB;
+  if (!partnerA && !partnerB) {
     return (
       <Card className="shadow-lg border-primary">
         <CardHeader>
@@ -145,18 +220,40 @@ const OverallSummary = ({
         <CardContent className="text-center space-y-4">
           <div className="text-6xl">⏳</div>
           <div>
-            <h3 className="text-xl font-semibold mb-2">
-              {completedPartner ? 'Waiting for Partner' : 'Ready to Begin'}
-            </h3>
+            <h3 className="text-xl font-semibold mb-2">Ready to Begin</h3>
             <p className="text-muted-foreground">
-              {completedPartner 
-                ? `${completedPartner.name} completed the assessment. Share this page with your partner to complete their assessment.`
-                : 'Both partners need to complete the assessment to see compatibility results.'
-              }
+              Both partners need to complete the assessment to see compatibility results.
             </p>
           </div>
         </CardContent>
       </Card>
+    );
+  }
+  
+  if (!partnerA || !partnerB) {
+    const completedPartner = partnerA || partnerB;
+    return (
+      <div className="space-y-6">
+        <SinglePartnerSummary 
+          partner={completedPartner!} 
+          onDownloadPDF={onDownloadSinglePartnerPDF}
+        />
+        
+        <Card className="shadow-lg border-primary">
+          <CardHeader>
+            <CardTitle className="text-2xl text-center">Waiting for Partner</CardTitle>
+          </CardHeader>
+          <CardContent className="text-center space-y-4">
+            <div className="text-6xl">⏳</div>
+            <div>
+              <h3 className="text-xl font-semibold mb-2">One Assessment Complete</h3>
+              <p className="text-muted-foreground">
+                {completedPartner!.name} has completed their assessment. Share this page with your partner to complete their assessment and see full compatibility results.
+              </p>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
     );
   }
 
@@ -233,40 +330,45 @@ const AssessmentResults = ({
   partnerA, 
   partnerB, 
   onRestart, 
-  onDownloadPDF 
+  onDownloadPDF,
+  onDownloadSinglePartnerPDF
 }: AssessmentResultsProps) => {
   const bothCompleted = partnerA && partnerB;
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-primary-lighter via-background to-accent">
+    <div className="min-h-screen bg-gradient-romantic">
       <div className="container mx-auto px-4 py-8">
         <div className="max-w-6xl mx-auto">
           {/* Header */}
           <div className="text-center mb-8">
-            <h1 className="text-4xl font-bold text-primary mb-4">
+            <h1 className="text-4xl font-bold text-white mb-4">
               Marriage Compatibility Results
             </h1>
-            <p className="text-xl text-muted-foreground">
+            <p className="text-xl text-white/90">
               Your comprehensive compatibility analysis
             </p>
           </div>
 
           {/* Overall Summary */}
           <div className="mb-8">
-            <OverallSummary partnerA={partnerA} partnerB={partnerB} />
+            <OverallSummary 
+              partnerA={partnerA} 
+              partnerB={partnerB}
+              onDownloadSinglePartnerPDF={onDownloadSinglePartnerPDF}
+            />
           </div>
 
           {/* Action Buttons */}
           <div className="flex flex-wrap gap-4 justify-center mb-8">
-            <Button onClick={onRestart} variant="outline" className="flex items-center gap-2">
+            <Button onClick={onRestart} variant="outline" className="bg-white/20 border-white/30 text-white hover:bg-white/30 flex items-center gap-2">
               <RefreshCw className="w-4 h-4" />
               Start New Assessment
             </Button>
             
             {bothCompleted && (
-              <Button onClick={onDownloadPDF} className="gradient-hero flex items-center gap-2">
+              <Button onClick={onDownloadPDF} className="bg-white text-primary hover:bg-white/90 flex items-center gap-2">
                 <Download className="w-4 h-4" />
-                Download PDF Report
+                Download Compatibility Report
               </Button>
             )}
           </div>
@@ -274,7 +376,7 @@ const AssessmentResults = ({
           {/* Category Breakdown */}
           {bothCompleted && (
             <div>
-              <h2 className="text-2xl font-bold text-center mb-6">Detailed Analysis by Category</h2>
+              <h2 className="text-2xl font-bold text-center mb-6 text-white">Detailed Analysis by Category</h2>
               <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {assessmentCategories.map(category => (
                   <CategorySummary

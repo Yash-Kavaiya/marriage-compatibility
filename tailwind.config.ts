@@ -33,6 +33,17 @@ export default {
 					light: 'hsl(var(--primary-light))',
 					lighter: 'hsl(var(--primary-lighter))',
 				},
+				masculine: {
+					DEFAULT: 'hsl(var(--masculine))',
+					light: 'hsl(var(--masculine-light))',
+					foreground: 'hsl(var(--masculine-foreground))',
+				},
+				feminine: {
+					DEFAULT: 'hsl(var(--feminine))',
+					light: 'hsl(var(--feminine-light))',
+					foreground: 'hsl(var(--feminine-foreground))',
+					soft: 'hsl(var(--feminine-soft))',
+				},
 				secondary: {
 					DEFAULT: 'hsl(var(--secondary))',
 					foreground: 'hsl(var(--secondary-foreground))'

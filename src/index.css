@@ -16,10 +16,20 @@
     --popover: 0 0% 100%;
     --popover-foreground: 214 32% 14%;
 
+    /* Masculine Colors - Deep Blue/Navy Theme */
     --primary: 214 84% 26%;
     --primary-foreground: 210 40% 98%;
     --primary-light: 214 84% 35%;
     --primary-lighter: 214 54% 85%;
+    --masculine: 220 84% 24%;
+    --masculine-light: 220 54% 85%;
+    --masculine-foreground: 210 40% 98%;
+
+    /* Feminine Colors - Rose/Blush Theme */
+    --feminine: 340 82% 52%;
+    --feminine-light: 340 52% 85%;
+    --feminine-foreground: 0 0% 100%;
+    --feminine-soft: 340 32% 92%;
 
     --secondary: 210 40% 96%;
     --secondary-foreground: 214 32% 14%;
@@ -54,6 +64,9 @@
 
     /* Gradients */
     --gradient-hero: linear-gradient(135deg, hsl(214 84% 26%), hsl(214 84% 35%));
+    --gradient-masculine: linear-gradient(135deg, hsl(220 84% 24%), hsl(214 84% 35%));
+    --gradient-feminine: linear-gradient(135deg, hsl(340 82% 52%), hsl(340 62% 65%));
+    --gradient-romantic: linear-gradient(135deg, hsl(220 84% 24%), hsl(340 82% 52%));
     --gradient-card: linear-gradient(145deg, hsl(0 0% 100%), hsl(210 40% 98%));
     --gradient-success: linear-gradient(135deg, hsl(142 71% 45%), hsl(142 71% 55%));
 
@@ -139,6 +152,18 @@
 @layer components {
   .gradient-hero {
     background: var(--gradient-hero);
+  }
+
+  .gradient-masculine {
+    background: var(--gradient-masculine);
+  }
+
+  .gradient-feminine {
+    background: var(--gradient-feminine);
+  }
+
+  .gradient-romantic {
+    background: var(--gradient-romantic);
   }
 
   .gradient-card {
