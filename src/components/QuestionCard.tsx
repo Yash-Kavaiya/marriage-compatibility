@@ -30,40 +30,62 @@ const RatingScale = ({
   onChange: (value: number) => void; 
   labels: string[];
   color: string;
-}) => (
-  <div className="space-y-3">
-    <h4 className="font-semibold text-lg text-foreground font-playfair">{title}</h4>
-    <div className="space-y-2">
-      {labels.map((label, index) => (
-        <button
-          key={index}
-          onClick={() => onChange(index + 1)}
-          className={`w-full p-3 text-left rounded-lg border-2 transition-all duration-200 shadow-soft relative overflow-hidden ${
-            value === index + 1
-              ? `bg-${color} border-${color} text-white shadow-romantic`
-              : 'gradient-pearl border-border hover:border-primary hover:shadow-soft'
-          }`}
-        >
-          {value === index + 1 && (
-            <div className="absolute top-1 right-1 text-xs opacity-50">✨</div>
-          )}
-          <div className="flex items-center justify-between">
-            <span className="font-medium">{index + 1}. {label}</span>
-            <div className={`w-6 h-6 rounded-full border-2 ${
-              value === index + 1 
-                ? 'bg-white border-white' 
-                : 'border-muted-foreground'
-            }`}>
-              {value === index + 1 && (
-                <div className={`w-2 h-2 rounded-full bg-${color} mx-auto mt-1`} />
-              )}
+}) => {
+  const getSelectedClasses = (color: string) => {
+    if (color === 'primary') {
+      return 'bg-primary border-primary text-white shadow-romantic';
+    }
+    if (color === 'success') {
+      return 'bg-success border-success text-white shadow-romantic';
+    }
+    return 'bg-primary border-primary text-white shadow-romantic';
+  };
+
+  const getDotClasses = (color: string) => {
+    if (color === 'primary') {
+      return 'bg-primary';
+    }
+    if (color === 'success') {
+      return 'bg-success';
+    }
+    return 'bg-primary';
+  };
+
+  return (
+    <div className="space-y-3">
+      <h4 className="font-semibold text-lg text-foreground font-playfair">{title}</h4>
+      <div className="space-y-2">
+        {labels.map((label, index) => (
+          <button
+            key={index}
+            onClick={() => onChange(index + 1)}
+            className={`w-full p-3 text-left rounded-lg border-2 transition-all duration-200 shadow-soft relative overflow-hidden ${
+              value === index + 1
+                ? getSelectedClasses(color)
+                : 'gradient-pearl border-border hover:border-primary hover:shadow-soft'
+            }`}
+          >
+            {value === index + 1 && (
+              <div className="absolute top-1 right-1 text-xs opacity-50">✨</div>
+            )}
+            <div className="flex items-center justify-between">
+              <span className="font-medium">{index + 1}. {label}</span>
+              <div className={`w-6 h-6 rounded-full border-2 ${
+                value === index + 1 
+                  ? 'bg-white border-white' 
+                  : 'border-muted-foreground'
+              }`}>
+                {value === index + 1 && (
+                  <div className={`w-2 h-2 rounded-full mx-auto mt-1 ${getDotClasses(color)}`} />
+                )}
+              </div>
             </div>
-          </div>
-        </button>
-      ))}
+          </button>
+        ))}
+      </div>
     </div>
-  </div>
-);
+  );
+};
 
 const QuestionCard = ({
   question,
@@ -80,6 +102,27 @@ const QuestionCard = ({
 }: QuestionCardProps) => {
   const progressPercentage = ((currentQuestionIndex + 1) / totalQuestions) * 100;
   const bothAnswered = importanceValue > 0 && flexibilityValue > 0;
+
+  // Auto-advance when both ratings are selected
+  const handleImportanceChange = (value: number) => {
+    onImportanceChange(value);
+    // Auto-advance if flexibility is already selected
+    if (flexibilityValue > 0) {
+      setTimeout(() => {
+        onNext();
+      }, 500); // Small delay for user feedback
+    }
+  };
+
+  const handleFlexibilityChange = (value: number) => {
+    onFlexibilityChange(value);
+    // Auto-advance if importance is already selected
+    if (importanceValue > 0) {
+      setTimeout(() => {
+        onNext();
+      }, 500); // Small delay for user feedback
+    }
+  };
 
   return (
     <div className="min-h-screen gradient-romantic p-4">
@@ -120,7 +163,7 @@ const QuestionCard = ({
               <RatingScale
                 title="Importance to Me"
                 value={importanceValue}
-                onChange={onImportanceChange}
+                onChange={handleImportanceChange}
                 labels={importanceLabels}
                 color="primary"
               />
@@ -129,7 +172,7 @@ const QuestionCard = ({
               <RatingScale
                 title="My Flexibility Level"
                 value={flexibilityValue}
-                onChange={onFlexibilityChange}
+                onChange={handleFlexibilityChange}
                 labels={flexibilityLabels}
                 color="success"
               />
@@ -150,7 +193,12 @@ const QuestionCard = ({
               <div className="text-center">
                 {!bothAnswered && (
                   <p className="text-sm text-warning font-medium">
-                    Please answer both questions to continue ✨
+                    Select both ratings - we'll auto-advance ✨
+                  </p>
+                )}
+                {bothAnswered && (
+                  <p className="text-sm text-success font-medium">
+                    Auto-advancing to next question... 🌟
                   </p>
                 )}
               </div>
