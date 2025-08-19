@@ -31,52 +31,39 @@ const RatingScale = ({
   labels: string[];
   color: string;
 }) => {
-  const getSelectedClasses = (color: string) => {
-    if (color === 'primary') {
-      return 'bg-primary border-primary text-white shadow-romantic';
-    }
-    if (color === 'success') {
-      return 'bg-success border-success text-white shadow-romantic';
-    }
-    return 'bg-primary border-primary text-white shadow-romantic';
-  };
-
-  const getDotClasses = (color: string) => {
-    if (color === 'primary') {
-      return 'bg-primary';
-    }
-    if (color === 'success') {
-      return 'bg-success';
-    }
-    return 'bg-primary';
-  };
+  const isSelected = (index: number) => value === index + 1;
+  const themeColor = color === 'primary' ? 'primary' : 'success';
 
   return (
-    <div className="space-y-3">
-      <h4 className="font-semibold text-lg text-foreground font-playfair">{title}</h4>
-      <div className="space-y-2">
+    <div className="space-y-4">
+      <h4 className="text-xl font-semibold text-foreground font-cormorant mb-2">{title}</h4>
+      <div className="space-y-3">
         {labels.map((label, index) => (
           <button
             key={index}
             onClick={() => onChange(index + 1)}
-            className={`w-full p-3 text-left rounded-lg border-2 transition-all duration-200 shadow-soft relative overflow-hidden ${
-              value === index + 1
-                ? getSelectedClasses(color)
-                : 'gradient-pearl border-border hover:border-primary hover:shadow-soft'
-            }`}
+            className={`rating-button ${isSelected(index) ? 'rating-button-selected' : ''}`}
           >
-            {value === index + 1 && (
-              <div className="absolute top-1 right-1 text-xs opacity-50">✨</div>
-            )}
             <div className="flex items-center justify-between">
-              <span className="font-medium">{index + 1}. {label}</span>
-              <div className={`w-6 h-6 rounded-full border-2 ${
-                value === index + 1 
+              <div className="flex items-center space-x-3">
+                <div className={`w-8 h-8 rounded-full border-2 flex items-center justify-center font-bold text-sm ${
+                  isSelected(index) 
+                    ? 'bg-white/20 border-white text-white' 
+                    : `border-${themeColor}/30 text-${themeColor}`
+                }`}>
+                  {index + 1}
+                </div>
+                <span className={`font-medium ${isSelected(index) ? 'text-white' : 'text-foreground'}`}>
+                  {label}
+                </span>
+              </div>
+              <div className={`w-5 h-5 rounded-full border-2 transition-all ${
+                isSelected(index) 
                   ? 'bg-white border-white' 
-                  : 'border-muted-foreground'
+                  : 'border-border'
               }`}>
-                {value === index + 1 && (
-                  <div className={`w-2 h-2 rounded-full mx-auto mt-1 ${getDotClasses(color)}`} />
+                {isSelected(index) && (
+                  <div className={`w-2 h-2 rounded-full bg-${themeColor} mx-auto mt-0.5`} />
                 )}
               </div>
             </div>
@@ -125,41 +112,47 @@ const QuestionCard = ({
   };
 
   return (
-    <div className="min-h-screen gradient-romantic p-4">
-      <div className="max-w-4xl mx-auto">
+    <div className="min-h-screen bg-background px-4 py-8">
+      <div className="max-w-5xl mx-auto">
         {/* Progress Header */}
-        <div className="mb-8">
-          <div className="text-center mb-4">
-            <div className="mb-3 text-4xl opacity-60">💌</div>
-            <h2 className="text-2xl font-bold text-white mb-2 font-playfair">
+        <div className="mb-10">
+          <div className="text-center mb-8">
+            <div className="w-16 h-16 rounded-full gradient-romantic flex items-center justify-center mx-auto mb-6 shadow-premium">
+              <span className="text-2xl text-white font-bold">{currentQuestionIndex + 1}</span>
+            </div>
+            <h1 className="text-3xl font-bold text-foreground mb-3 font-cormorant">
               Question {currentQuestionIndex + 1} of {totalQuestions}
-            </h2>
-            <p className="text-white/90 font-medium font-dancing text-lg">{question.category}</p>
+            </h1>
+            <div className="inline-block px-4 py-2 bg-primary/10 rounded-full">
+              <p className="text-primary font-medium text-lg">{question.category}</p>
+            </div>
           </div>
-          <div className="bg-white/20 rounded-full p-1">
-            <Progress value={progressPercentage} className="h-3" />
+          
+          <div className="max-w-2xl mx-auto">
+            <div className="bg-secondary/50 rounded-full p-1 shadow-soft">
+              <Progress value={progressPercentage} className="h-3" />
+            </div>
+            <p className="text-muted-foreground text-center mt-3 text-lg font-medium">
+              {Math.round(progressPercentage)}% Complete
+            </p>
           </div>
-          <p className="text-sm text-white/80 text-center mt-2">
-            {Math.round(progressPercentage)}% Complete
-          </p>
         </div>
 
         {/* Question Card */}
-        <Card className="shadow-romantic gradient-pearl mb-6 relative overflow-hidden">
-          <div className="absolute top-4 right-4 text-3xl opacity-10">🌹</div>
-          <CardHeader>
-            <CardTitle className="text-xl leading-relaxed font-playfair">
+        <div className="card-premium p-10 mb-8">
+          <div className="text-center mb-10">
+            <h2 className="text-3xl font-bold text-foreground leading-relaxed font-cormorant mb-4">
               {question.question}
-            </CardTitle>
+            </h2>
             {question.explanation && (
-              <p className="text-muted-foreground mt-2">
+              <p className="text-xl text-muted-foreground leading-relaxed max-w-3xl mx-auto">
                 {question.explanation}
               </p>
             )}
-          </CardHeader>
-          <CardContent>
-            <div className="grid lg:grid-cols-2 gap-8">
-              {/* Importance Rating */}
+          </div>
+          <div className="grid lg:grid-cols-2 gap-12 mb-10">
+            {/* Importance Rating */}
+            <div className="space-y-6">
               <RatingScale
                 title="Importance to Me"
                 value={importanceValue}
@@ -167,8 +160,10 @@ const QuestionCard = ({
                 labels={importanceLabels}
                 color="primary"
               />
+            </div>
 
-              {/* Flexibility Rating */}
+            {/* Flexibility Rating */}
+            <div className="space-y-6">
               <RatingScale
                 title="My Flexibility Level"
                 value={flexibilityValue}
@@ -177,45 +172,53 @@ const QuestionCard = ({
                 color="success"
               />
             </div>
+          </div>
 
-            {/* Navigation */}
-            <div className="flex justify-between items-center mt-8 pt-6 border-t border-border/50">
+          {/* Status & Navigation */}
+          <div className="border-t border-border/20 pt-8">
+            <div className="flex justify-between items-center">
               <Button
                 onClick={onPrevious}
                 disabled={!canGoPrevious}
                 variant="outline"
-                className="flex items-center gap-2 shadow-soft"
+                className="flex items-center gap-2 px-6 py-3 text-lg shadow-soft"
+                size="lg"
               >
-                <ChevronLeft className="w-4 h-4" />
+                <ChevronLeft className="w-5 h-5" />
                 Previous
               </Button>
 
               <div className="text-center">
                 {!bothAnswered && (
-                  <p className="text-sm text-warning font-medium">
-                    Select both ratings - we'll auto-advance ✨
-                  </p>
+                  <div className="px-6 py-3 bg-warning/10 rounded-full">
+                    <p className="text-warning font-medium text-lg">
+                      💡 Select both ratings to continue automatically
+                    </p>
+                  </div>
                 )}
                 {bothAnswered && (
-                  <p className="text-sm text-success font-medium">
-                    Auto-advancing to next question... 🌟
-                  </p>
+                  <div className="px-6 py-3 bg-success/10 rounded-full">
+                    <p className="text-success font-medium text-lg">
+                      ✨ Auto-advancing to next question...
+                    </p>
+                  </div>
                 )}
               </div>
 
               <Button
                 onClick={onNext}
                 disabled={!bothAnswered}
-                className={`flex items-center gap-2 shadow-romantic ${
-                  bothAnswered ? 'gradient-hero' : ''
+                className={`flex items-center gap-2 px-6 py-3 text-lg shadow-premium ${
+                  bothAnswered ? 'btn-primary' : ''
                 }`}
+                size="lg"
               >
-                {currentQuestionIndex === totalQuestions - 1 ? 'Complete Assessment 💕' : 'Next'}
-                <ChevronRight className="w-4 h-4" />
+                {currentQuestionIndex === totalQuestions - 1 ? 'Complete Assessment' : 'Next Question'}
+                <ChevronRight className="w-5 h-5" />
               </Button>
             </div>
-          </CardContent>
-        </Card>
+          </div>
+        </div>
       </div>
     </div>
   );

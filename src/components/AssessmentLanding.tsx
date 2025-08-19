@@ -9,184 +9,199 @@ interface AssessmentLandingProps {
 
 const AssessmentLanding = ({ onStartAssessment }: AssessmentLandingProps) => {
   return (
-    <div className="min-h-screen bg-gradient-romantic">
-      <div className="container mx-auto px-4 py-8">
-        <div className="max-w-4xl mx-auto">
+    <div className="min-h-screen bg-background">
+      <div className="container mx-auto px-6 py-12">
+        <div className="max-w-6xl mx-auto">
           {/* Navigation */}
-          <div className="flex justify-end mb-8">
+          <div className="flex justify-end mb-16">
             <Link to="/contact">
-              <Button variant="outline" className="bg-white/20 border-white/30 text-white hover:bg-white/30">
+              <Button variant="outline" className="shadow-soft border-border text-foreground hover:shadow-premium">
                 <Phone className="w-4 h-4 mr-2" />
                 Contact Us
               </Button>
             </Link>
           </div>
 
-          {/* Header */}
-          <div className="text-center mb-12">
-            <div className="mb-6 relative">
-              <div className="absolute inset-0 flex items-center justify-center">
-                <div className="text-6xl opacity-20">💍</div>
+          {/* Hero Section */}
+          <div className="text-center mb-20">
+            <div className="mb-8 relative inline-block">
+              <div className="w-24 h-24 rounded-full gradient-romantic flex items-center justify-center shadow-premium">
+                <Heart className="w-12 h-12 text-white" />
               </div>
-              <Heart className="w-16 h-16 text-white mx-auto mb-4 relative z-10" />
+              <div className="absolute -top-2 -right-2 text-2xl animate-pulse">✨</div>
             </div>
-            <h1 className="text-5xl font-bold text-white mb-6 font-playfair">
-              Marriage Compatibility Master Assessment
+            <h1 className="text-6xl font-bold text-foreground mb-6 font-cormorant leading-tight">
+              Marriage Compatibility
+              <span className="block text-primary">Master Assessment</span>
             </h1>
-            <div className="text-2xl font-dancing text-white/95 mb-4">
-              "Two hearts, one journey"
+            <div className="text-2xl font-cormorant italic text-muted-foreground mb-6">
+              "Building lasting bonds through understanding"
             </div>
-            <p className="text-xl text-white/90 max-w-2xl mx-auto">
-              Discover your relationship compatibility across 86 essential questions in 14 key life areas. 
-              Build stronger foundations for your future together.
+            <p className="text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed">
+              Discover your relationship compatibility across 86 carefully crafted questions in 14 essential life areas. 
+              Create a stronger foundation for your future together with professional-grade insights.
             </p>
           </div>
 
-          {/* Features */}
-          <div className="grid md:grid-cols-3 gap-6 mb-12">
-            <Card className="shadow-romantic gradient-pearl bg-white/95 backdrop-blur relative overflow-hidden">
-              <div className="absolute top-2 right-2 text-2xl opacity-30">🌹</div>
-              <CardHeader className="text-center">
-                <CheckCircle className="w-10 h-10 text-success mx-auto mb-3" />
-                <CardTitle className="text-lg font-playfair">86 Comprehensive Questions</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <p className="text-center text-muted-foreground">
-                  Covering 14 essential areas from values to intimacy, finances to future planning
-                </p>
-              </CardContent>
-            </Card>
+          {/* Key Features */}
+          <div className="grid md:grid-cols-3 gap-8 mb-20">
+            <div className="card-premium p-8 text-center group hover:shadow-premium">
+              <div className="w-16 h-16 rounded-full bg-success/10 flex items-center justify-center mx-auto mb-6 group-hover:bg-success/20 transition-all">
+                <CheckCircle className="w-8 h-8 text-success" />
+              </div>
+              <h3 className="text-xl font-semibold font-cormorant text-foreground mb-4">86 Expert Questions</h3>
+              <p className="text-muted-foreground leading-relaxed">
+                Professionally crafted questions covering 14 critical life areas from core values to future planning
+              </p>
+            </div>
 
-            <Card className="shadow-romantic gradient-pearl bg-white/95 backdrop-blur relative overflow-hidden">
-              <div className="absolute top-2 right-2 text-2xl opacity-30">💕</div>
-              <CardHeader className="text-center">
-                <Users className="w-10 h-10 text-primary mx-auto mb-3" />
-                <CardTitle className="text-lg font-playfair">Dual Rating System</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <p className="text-center text-muted-foreground">
-                  Rate both importance and flexibility for each topic to understand your compatibility
-                </p>
-              </CardContent>
-            </Card>
+            <div className="card-premium p-8 text-center group hover:shadow-premium">
+              <div className="w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center mx-auto mb-6 group-hover:bg-primary/20 transition-all">
+                <Users className="w-8 h-8 text-primary" />
+              </div>
+              <h3 className="text-xl font-semibold font-cormorant text-foreground mb-4">Smart Rating System</h3>
+              <p className="text-muted-foreground leading-relaxed">
+                Rate both importance and flexibility for nuanced compatibility insights and recommendations
+              </p>
+            </div>
 
-            <Card className="shadow-romantic gradient-pearl bg-white/95 backdrop-blur relative overflow-hidden">
-              <div className="absolute top-2 right-2 text-2xl opacity-30">✨</div>
-              <CardHeader className="text-center">
-                <Heart className="w-10 h-10 text-compatibility-red mx-auto mb-3" />
-                <CardTitle className="text-lg font-playfair">Actionable Results</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <p className="text-center text-muted-foreground">
-                  Get traffic-light guidance and downloadable PDF report with action items
-                </p>
-              </CardContent>
-            </Card>
+            <div className="card-premium p-8 text-center group hover:shadow-premium">
+              <div className="w-16 h-16 rounded-full bg-accent/10 flex items-center justify-center mx-auto mb-6 group-hover:bg-accent/20 transition-all">
+                <Heart className="w-8 h-8 text-accent" />
+              </div>
+              <h3 className="text-xl font-semibold font-cormorant text-foreground mb-4">Actionable Insights</h3>
+              <p className="text-muted-foreground leading-relaxed">
+                Get detailed compatibility analysis with personalized guidance and downloadable reports
+              </p>
+            </div>
           </div>
 
           {/* Assessment Options */}
-          <div className="text-center mb-12">
-            <h2 className="text-2xl font-bold text-white mb-8 font-playfair">Choose Your Assessment Style</h2>
-            
-            {/* Regular Assessment */}
-            <div className="grid md:grid-cols-2 gap-6 max-w-4xl mx-auto mb-8">
-              <Card className="shadow-romantic gradient-pearl bg-white/95 backdrop-blur relative overflow-hidden">
-                <div className="absolute top-3 right-3 text-3xl opacity-20">🤵</div>
-                <CardHeader>
-                  <div className="flex items-center justify-center mb-4">
-                    <MessageSquare className="w-12 h-12 text-masculine" />
-                  </div>
-                  <CardTitle className="text-masculine font-playfair">Traditional Assessment</CardTitle>
-                </CardHeader>
-                <CardContent className="space-y-4">
-                  <p className="text-muted-foreground">Complete the assessment at your own pace with interactive sliders and visual feedback.</p>
-                  <div className="space-y-3">
-                    <Button 
-                      onClick={() => onStartAssessment('A', 'regular')}
-                      className="w-full gradient-masculine shadow-soft"
-                    >
-                      <Users className="w-4 h-4 mr-2" />
-                      Partner A - Traditional
-                    </Button>
-                    <Button 
-                      onClick={() => onStartAssessment('B', 'regular')}
-                      className="w-full gradient-masculine shadow-soft"
-                      variant="outline"
-                    >
-                      <Users className="w-4 h-4 mr-2" />
-                      Partner B - Traditional
-                    </Button>
-                  </div>
-                </CardContent>
-              </Card>
-
-              <Card className="shadow-romantic gradient-pearl bg-white/95 backdrop-blur relative overflow-hidden">
-                <div className="absolute top-3 right-3 text-3xl opacity-20">👰</div>
-                <CardHeader>
-                  <div className="flex items-center justify-center mb-4">
-                    <Mic className="w-12 h-12 text-feminine" />
-                  </div>
-                  <CardTitle className="text-feminine font-playfair">Voice Assessment</CardTitle>
-                </CardHeader>
-                <CardContent className="space-y-4">
-                  <p className="text-muted-foreground">Experience our AI-powered voice assessment with spoken questions and voice responses.</p>
-                  <div className="space-y-3">
-                    <Button 
-                      onClick={() => onStartAssessment('A', 'voice')}
-                      className="w-full gradient-feminine shadow-soft"
-                    >
-                      <Mic className="w-4 h-4 mr-2" />
-                      Partner A - Voice
-                    </Button>
-                    <Button 
-                      onClick={() => onStartAssessment('B', 'voice')}
-                      className="w-full gradient-feminine shadow-soft"
-                      variant="outline"
-                    >
-                      <Mic className="w-4 h-4 mr-2" />
-                      Partner B - Voice
-                    </Button>
-                  </div>
-                </CardContent>
-              </Card>
+          <div className="mb-16">
+            <div className="text-center mb-12">
+              <h2 className="text-4xl font-bold text-foreground mb-4 font-cormorant">Choose Your Experience</h2>
+              <p className="text-xl text-muted-foreground">Select your preferred assessment method</p>
             </div>
             
-            <p className="text-sm text-white/80 mt-6">
-              Both partners should complete the assessment independently for the most accurate results
-            </p>
+            <div className="grid md:grid-cols-2 gap-8 max-w-5xl mx-auto mb-8">
+              {/* Traditional Assessment */}
+              <div className="card-premium p-8 group hover:shadow-xl-custom">
+                <div className="text-center mb-6">
+                  <div className="w-20 h-20 rounded-2xl gradient-masculine flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform">
+                    <MessageSquare className="w-10 h-10 text-white" />
+                  </div>
+                  <h3 className="text-2xl font-semibold font-cormorant text-foreground mb-2">Interactive Assessment</h3>
+                  <p className="text-muted-foreground mb-6">Comprehensive questionnaire with elegant interface and instant feedback</p>
+                </div>
+                <div className="space-y-3">
+                  <Button 
+                    onClick={() => onStartAssessment('A', 'regular')}
+                    className="w-full btn-primary py-3 text-lg font-medium"
+                  >
+                    <Users className="w-5 h-5 mr-2" />
+                    Partner A - Start Assessment
+                  </Button>
+                  <Button 
+                    onClick={() => onStartAssessment('B', 'regular')}
+                    className="w-full btn-secondary py-3 text-lg font-medium"
+                    variant="outline"
+                  >
+                    <Users className="w-5 h-5 mr-2" />
+                    Partner B - Start Assessment
+                  </Button>
+                </div>
+              </div>
+
+              {/* Voice Assessment */}
+              <div className="card-premium p-8 group hover:shadow-xl-custom">
+                <div className="text-center mb-6">
+                  <div className="w-20 h-20 rounded-2xl gradient-feminine flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform">
+                    <Mic className="w-10 h-10 text-white" />
+                  </div>
+                  <h3 className="text-2xl font-semibold font-cormorant text-foreground mb-2">AI Voice Experience</h3>
+                  <p className="text-muted-foreground mb-6">Cutting-edge voice interaction with AI-powered conversation flow</p>
+                </div>
+                <div className="space-y-3">
+                  <Button 
+                    onClick={() => onStartAssessment('A', 'voice')}
+                    className="w-full bg-gradient-to-r from-feminine to-feminine/80 hover:from-feminine/90 hover:to-feminine/70 text-white shadow-premium py-3 text-lg font-medium"
+                  >
+                    <Mic className="w-5 h-5 mr-2" />
+                    Partner A - Voice Assessment
+                  </Button>
+                  <Button 
+                    onClick={() => onStartAssessment('B', 'voice')}
+                    className="w-full border-feminine text-feminine hover:bg-feminine hover:text-white shadow-soft py-3 text-lg font-medium"
+                    variant="outline"
+                  >
+                    <Mic className="w-5 h-5 mr-2" />
+                    Partner B - Voice Assessment
+                  </Button>
+                </div>
+              </div>
+            </div>
+            
+            <div className="text-center">
+              <p className="text-muted-foreground text-lg">
+                💡 <em>Both partners complete assessments independently for optimal accuracy</em>
+              </p>
+            </div>
           </div>
 
-          {/* Instructions */}
-          <Card className="shadow-romantic gradient-pearl mb-8 bg-white/95 backdrop-blur relative overflow-hidden">
-            <div className="absolute top-4 right-4 text-4xl opacity-10">🌸</div>
-            <CardHeader>
-              <CardTitle className="text-2xl text-center font-playfair">How It Works</CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <div className="grid md:grid-cols-2 gap-6">
-                <div>
-                  <h3 className="font-semibold text-lg mb-2 text-primary font-playfair">Rating System</h3>
-                  <p className="text-muted-foreground mb-3">Each question requires two ratings (1-5 scale):</p>
-                  <ul className="space-y-2 text-sm">
-                    <li><strong>Importance:</strong> How important this topic is to you personally</li>
-                    <li><strong>Flexibility:</strong> How much difference you can accept (1=very flexible, 5=non-negotiable)</li>
-                  </ul>
-                </div>
-                <div>
-                  <h3 className="font-semibold text-lg mb-2 text-primary font-playfair">14 Key Areas</h3>
-                  <div className="text-sm text-muted-foreground space-y-1">
-                    <p>• Core Values & Ethics</p>
-                    <p>• Religion & Spirituality</p>
-                    <p>• Relationship Boundaries</p>
-                    <p>• Children & Parenting</p>
-                    <p>• Finances & Career</p>
-                    <p>• Communication & Intimacy</p>
-                    <p>• And 8 more essential areas...</p>
+          {/* How It Works */}
+          <div className="card-premium p-10 mb-8">
+            <div className="text-center mb-10">
+              <h2 className="text-3xl font-bold text-foreground font-cormorant mb-4">How It Works</h2>
+              <p className="text-xl text-muted-foreground">A sophisticated approach to relationship assessment</p>
+            </div>
+            
+            <div className="grid md:grid-cols-2 gap-12">
+              <div className="space-y-6">
+                <div className="flex items-start space-x-4">
+                  <div className="w-8 h-8 rounded-full bg-primary flex items-center justify-center flex-shrink-0 mt-1">
+                    <span className="text-white text-sm font-bold">1</span>
+                  </div>
+                  <div>
+                    <h3 className="font-semibold text-lg mb-2 text-foreground font-cormorant">Dual Rating System</h3>
+                    <p className="text-muted-foreground leading-relaxed">Each question requires two thoughtful ratings on a 1-5 scale:</p>
+                    <div className="mt-3 space-y-2 text-sm">
+                      <div className="flex items-center space-x-2">
+                        <div className="w-2 h-2 bg-primary rounded-full"></div>
+                        <span><strong>Importance:</strong> Personal significance of this topic</span>
+                      </div>
+                      <div className="flex items-center space-x-2">
+                        <div className="w-2 h-2 bg-success rounded-full"></div>
+                        <span><strong>Flexibility:</strong> Willingness to compromise (1=very flexible, 5=non-negotiable)</span>
+                      </div>
+                    </div>
                   </div>
                 </div>
               </div>
-            </CardContent>
-          </Card>
+              
+              <div className="space-y-6">
+                <div className="flex items-start space-x-4">
+                  <div className="w-8 h-8 rounded-full bg-accent flex items-center justify-center flex-shrink-0 mt-1">
+                    <span className="text-white text-sm font-bold">2</span>
+                  </div>
+                  <div>
+                    <h3 className="font-semibold text-lg mb-2 text-foreground font-cormorant">14 Essential Life Areas</h3>
+                    <div className="text-muted-foreground space-y-2 text-sm">
+                      <div className="grid grid-cols-1 gap-1">
+                        <span>• Core Values & Life Philosophy</span>
+                        <span>• Religion & Spiritual Beliefs</span>
+                        <span>• Relationship Dynamics & Boundaries</span>
+                        <span>• Children & Parenting Styles</span>
+                        <span>• Financial Goals & Management</span>
+                        <span>• Communication & Intimacy</span>
+                        <span>• Career & Personal Growth</span>
+                        <span className="font-medium">• Plus 7 additional critical areas</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
