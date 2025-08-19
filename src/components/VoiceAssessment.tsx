@@ -1,11 +1,12 @@
 import { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Mic, MicOff, Volume2, VolumeX } from "lucide-react";
+import { Mic, MicOff, Volume2, VolumeX, AlertTriangle } from "lucide-react";
 import { useSpeechSynthesis, useSpeechRecognition } from 'react-speech-kit';
 import { assessmentQuestions } from '@/data/assessmentQuestions';
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
+import { useToast } from "@/hooks/use-toast";
 
 interface VoiceAssessmentProps {
   onComplete: (responses: { questionId: number; importance: number; flexibility: number; }[]) => void;
@@ -19,22 +20,102 @@ const VoiceAssessment = ({ onComplete, onCancel, partnerType }: VoiceAssessmentP
   const [currentMode, setCurrentMode] = useState<'listening' | 'importance' | 'flexibility' | 'next'>('listening');
   const [isListening, setIsListening] = useState(false);
   const [currentResponse, setCurrentResponse] = useState({ importance: 0, flexibility: 0 });
+  const [permissionGranted, setPermissionGranted] = useState(false);
+  const [isInitializing, setIsInitializing] = useState(true);
+  const { toast } = useToast();
 
-  const { speak, cancel, speaking, supported: speechSupported } = useSpeechSynthesis();
+  const { speak, cancel, speaking, supported: speechSupported } = useSpeechSynthesis({
+    onEnd: () => {
+      console.log('Speech synthesis ended');
+    },
+    onError: (error) => {
+      console.error('Speech synthesis error:', error);
+      toast({
+        title: "Speech Error",
+        description: "There was an issue with text-to-speech. Please try again.",
+        variant: "destructive",
+      });
+    }
+  });
+  
   const { listen, listening, stop, supported: recognitionSupported } = useSpeechRecognition({
     onResult: (result: string) => {
+      console.log('Voice recognition result:', result);
       handleVoiceResult(result);
     },
+    onError: (error) => {
+      console.error('Speech recognition error:', error);
+      toast({
+        title: "Voice Recognition Error",
+        description: "Could not understand your response. Please try speaking again.",
+        variant: "destructive",
+      });
+      setIsListening(false);
+    },
+    onEnd: () => {
+      console.log('Speech recognition ended');
+      setIsListening(false);
+    }
   });
 
   const currentQuestion = assessmentQuestions[currentQuestionIndex];
   const progress = ((currentQuestionIndex + 1) / assessmentQuestions.length) * 100;
 
   useEffect(() => {
-    if (speechSupported && currentQuestion) {
+    checkPermissionsAndInitialize();
+  }, []);
+
+  useEffect(() => {
+    if (speechSupported && currentQuestion && permissionGranted) {
       speakQuestion();
     }
-  }, [currentQuestionIndex, speechSupported]);
+  }, [currentQuestionIndex, speechSupported, permissionGranted]);
+
+  const checkPermissionsAndInitialize = async () => {
+    try {
+      setIsInitializing(true);
+      
+      // Check if we're on HTTPS or localhost
+      const isSecure = window.location.protocol === 'https:' || window.location.hostname === 'localhost';
+      if (!isSecure) {
+        toast({
+          title: "Secure Connection Required",
+          description: "Voice features require HTTPS. Please use the secure version of this site.",
+          variant: "destructive",
+        });
+        setIsInitializing(false);
+        return;
+      }
+
+      // Request microphone permission
+      try {
+        const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+        stream.getTracks().forEach(track => track.stop()); // Stop the stream immediately
+        setPermissionGranted(true);
+        
+        toast({
+          title: "Voice Ready!",
+          description: "Microphone access granted. You can now use voice features.",
+        });
+      } catch (permissionError) {
+        console.error('Microphone permission denied:', permissionError);
+        toast({
+          title: "Microphone Permission Required",
+          description: "Please allow microphone access to use voice features.",
+          variant: "destructive",
+        });
+      }
+    } catch (error) {
+      console.error('Error initializing voice features:', error);
+      toast({
+        title: "Voice Initialization Failed",
+        description: "Could not initialize voice features. Please try refreshing the page.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsInitializing(false);
+    }
+  };
 
   const speakQuestion = () => {
     if (currentMode === 'listening') {
@@ -116,9 +197,24 @@ const VoiceAssessment = ({ onComplete, onCancel, partnerType }: VoiceAssessmentP
     return 0;
   };
 
-  const startListening = () => {
-    setIsListening(true);
-    listen();
+  const startListening = async () => {
+    if (!permissionGranted) {
+      await checkPermissionsAndInitialize();
+      return;
+    }
+    
+    try {
+      setIsListening(true);
+      listen();
+    } catch (error) {
+      console.error('Error starting speech recognition:', error);
+      toast({
+        title: "Cannot Start Listening",
+        description: "Please check your microphone permissions and try again.",
+        variant: "destructive",
+      });
+      setIsListening(false);
+    }
   };
 
   const stopListening = () => {
@@ -134,16 +230,69 @@ const VoiceAssessment = ({ onComplete, onCancel, partnerType }: VoiceAssessmentP
     }
   };
 
+  if (isInitializing) {
+    return (
+      <div className="min-h-screen bg-gradient-romantic flex items-center justify-center p-4">
+        <Card className="max-w-md">
+          <CardHeader>
+            <CardTitle className="text-center">Initializing Voice Features</CardTitle>
+          </CardHeader>
+          <CardContent className="text-center space-y-4">
+            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto"></div>
+            <p>Setting up voice recognition and text-to-speech...</p>
+          </CardContent>
+        </Card>
+      </div>
+    );
+  }
+
   if (!speechSupported || !recognitionSupported) {
     return (
       <div className="min-h-screen bg-gradient-romantic flex items-center justify-center p-4">
         <Card className="max-w-md">
           <CardHeader>
-            <CardTitle className="text-center">Voice Assessment Not Available</CardTitle>
+            <CardTitle className="text-center flex items-center justify-center gap-2">
+              <AlertTriangle className="w-5 h-5 text-destructive" />
+              Voice Assessment Not Available
+            </CardTitle>
           </CardHeader>
           <CardContent className="text-center space-y-4">
-            <p>Your browser doesn't support voice features. Please use the regular assessment instead.</p>
+            <div className="space-y-2">
+              <p>Your browser doesn't support voice features:</p>
+              <ul className="text-sm text-muted-foreground space-y-1">
+                {!speechSupported && <li>• Text-to-speech not supported</li>}
+                {!recognitionSupported && <li>• Speech recognition not supported</li>}
+              </ul>
+            </div>
+            <div className="text-sm text-muted-foreground">
+              <p>Try using Chrome, Safari, or Edge for the best voice experience.</p>
+            </div>
             <Button onClick={onCancel}>Return to Regular Assessment</Button>
+          </CardContent>
+        </Card>
+      </div>
+    );
+  }
+
+  if (!permissionGranted) {
+    return (
+      <div className="min-h-screen bg-gradient-romantic flex items-center justify-center p-4">
+        <Card className="max-w-md">
+          <CardHeader>
+            <CardTitle className="text-center">Microphone Permission Required</CardTitle>
+          </CardHeader>
+          <CardContent className="text-center space-y-4">
+            <div className="space-y-2">
+              <Mic className="w-12 h-12 mx-auto text-muted-foreground" />
+              <p>Voice assessment requires microphone access to hear your responses.</p>
+              <p className="text-sm text-muted-foreground">
+                Your privacy is protected - audio is only processed locally and never stored.
+              </p>
+            </div>
+            <div className="space-y-2">
+              <Button onClick={checkPermissionsAndInitialize}>Grant Microphone Access</Button>
+              <Button onClick={onCancel} variant="outline">Use Regular Assessment Instead</Button>
+            </div>
           </CardContent>
         </Card>
       </div>
