@@ -86,10 +86,11 @@ const CategorySummary = ({
   const overallScore = redCount > 0 ? 'red' : yellowCount > 0 ? 'yellow' : 'green';
 
   return (
-    <Card className="shadow-card">
+    <Card className="shadow-romantic gradient-pearl relative overflow-hidden">
+      <div className="absolute top-2 right-2 text-xl opacity-30">🌸</div>
       <CardHeader>
         <div className="flex items-center justify-between">
-          <CardTitle className="text-lg">{category}</CardTitle>
+          <CardTitle className="text-lg font-playfair">{category}</CardTitle>
           <Badge 
             className={`
               ${overallScore === 'green' ? 'bg-compatibility-green text-white' : ''}
@@ -140,9 +141,10 @@ const SinglePartnerSummary = ({
   const qualityAnalysis = generateQualityOfLifeAnalysis(partner.responses);
   
   return (
-    <Card className="shadow-lg border-primary bg-gradient-to-br from-white to-primary-lighter/20">
+    <Card className="shadow-romantic gradient-pearl border-primary relative overflow-hidden">
+      <div className="absolute top-4 right-4 text-3xl opacity-20">💝</div>
       <CardHeader>
-        <CardTitle className="text-2xl text-center">Quality of Life Analysis for {partner.name}</CardTitle>
+        <CardTitle className="text-2xl text-center font-playfair">Quality of Life Analysis for {partner.name}</CardTitle>
       </CardHeader>
       <CardContent className="space-y-6">
         <div className="text-center">
@@ -275,9 +277,10 @@ const OverallSummary = ({
   const compatibilityPercentage = Math.round((greenCount / allScores.length) * 100);
 
   return (
-    <Card className="shadow-lg border-primary">
+    <Card className="shadow-romantic gradient-pearl border-primary relative overflow-hidden">
+      <div className="absolute top-4 right-4 text-4xl opacity-20">💕</div>
       <CardHeader>
-        <CardTitle className="text-2xl text-center">Overall Compatibility</CardTitle>
+        <CardTitle className="text-2xl text-center font-playfair">Overall Compatibility</CardTitle>
       </CardHeader>
       <CardContent className="space-y-6">
         <div className="text-center">
@@ -341,9 +344,13 @@ const AssessmentResults = ({
         <div className="max-w-6xl mx-auto">
           {/* Header */}
           <div className="text-center mb-8">
-            <h1 className="text-4xl font-bold text-white mb-4">
+            <div className="mb-6 text-6xl opacity-80">💐</div>
+            <h1 className="text-4xl font-bold text-white mb-4 font-playfair">
               Marriage Compatibility Results
             </h1>
+            <div className="text-2xl font-dancing text-white/95 mb-4">
+              "Love is in the details"
+            </div>
             <p className="text-xl text-white/90">
               Your comprehensive compatibility analysis
             </p>
@@ -360,15 +367,15 @@ const AssessmentResults = ({
 
           {/* Action Buttons */}
           <div className="flex flex-wrap gap-4 justify-center mb-8">
-            <Button onClick={onRestart} variant="outline" className="bg-white/20 border-white/30 text-white hover:bg-white/30 flex items-center gap-2">
+            <Button onClick={onRestart} variant="outline" className="bg-white/20 border-white/30 text-white hover:bg-white/30 flex items-center gap-2 shadow-soft">
               <RefreshCw className="w-4 h-4" />
               Start New Assessment
             </Button>
             
             {bothCompleted && (
-              <Button onClick={onDownloadPDF} className="bg-white text-primary hover:bg-white/90 flex items-center gap-2">
+              <Button onClick={onDownloadPDF} className="bg-white text-primary hover:bg-white/90 flex items-center gap-2 shadow-romantic">
                 <Download className="w-4 h-4" />
-                Download Compatibility Report
+                Download Compatibility Report 📋
               </Button>
             )}
           </div>
@@ -376,7 +383,7 @@ const AssessmentResults = ({
           {/* Category Breakdown */}
           {bothCompleted && (
             <div>
-              <h2 className="text-2xl font-bold text-center mb-6 text-white">Detailed Analysis by Category</h2>
+              <h2 className="text-2xl font-bold text-center mb-6 text-white font-playfair">Detailed Analysis by Category</h2>
               <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {assessmentCategories.map(category => (
                   <CategorySummary

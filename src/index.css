@@ -2,78 +2,88 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Marriage Compatibility Assessment Design System */
+/* Wedding-Themed Marriage Compatibility Assessment Design System */
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400;500;600;700&display=swap');
 
 @layer base {
   :root {
-    --background: 210 20% 98%;
-    --foreground: 214 32% 14%;
+    /* Wedding Theme Base Colors */
+    --background: 35 20% 98%; /* Warm ivory */
+    --foreground: 30 15% 15%; /* Rich chocolate brown */
 
     --card: 0 0% 100%;
-    --card-foreground: 214 32% 14%;
+    --card-foreground: 30 15% 15%;
 
     --popover: 0 0% 100%;
-    --popover-foreground: 214 32% 14%;
+    --popover-foreground: 30 15% 15%;
 
-    /* Masculine Colors - Deep Blue/Navy Theme */
-    --primary: 214 84% 26%;
-    --primary-foreground: 210 40% 98%;
-    --primary-light: 214 84% 35%;
-    --primary-lighter: 214 54% 85%;
-    --masculine: 220 84% 24%;
-    --masculine-light: 220 54% 85%;
-    --masculine-foreground: 210 40% 98%;
+    /* Wedding Theme Primary - Rose Gold */
+    --primary: 15 60% 65%; /* Rose gold */
+    --primary-foreground: 0 0% 100%;
+    --primary-light: 15 45% 75%;
+    --primary-lighter: 15 30% 90%;
+    
+    /* Groom Colors - Deep Burgundy/Wine */
+    --masculine: 355 65% 35%; /* Deep wine */
+    --masculine-light: 355 40% 85%;
+    --masculine-foreground: 0 0% 100%;
 
-    /* Feminine Colors - Rose/Blush Theme */
-    --feminine: 340 82% 52%;
-    --feminine-light: 340 52% 85%;
-    --feminine-foreground: 0 0% 100%;
-    --feminine-soft: 340 32% 92%;
+    /* Bride Colors - Blush/Champagne */
+    --feminine: 25 45% 85%; /* Champagne blush */
+    --feminine-light: 25 30% 92%;
+    --feminine-foreground: 30 15% 15%;
+    --feminine-soft: 25 20% 95%;
 
-    --secondary: 210 40% 96%;
-    --secondary-foreground: 214 32% 14%;
+    --secondary: 35 25% 95%; /* Warm cream */
+    --secondary-foreground: 30 15% 15%;
 
-    --muted: 210 40% 95%;
-    --muted-foreground: 215 16% 47%;
+    --muted: 35 20% 93%; /* Soft ivory */
+    --muted-foreground: 30 10% 50%;
 
-    --accent: 214 54% 85%;
-    --accent-foreground: 214 32% 14%;
+    --accent: 45 85% 75%; /* Champagne gold */
+    --accent-foreground: 30 15% 15%;
 
-    --success: 142 71% 45%;
+    /* Wedding Theme Status Colors */
+    --success: 120 60% 50%; /* Sage green */
     --success-foreground: 0 0% 100%;
-    --success-light: 142 76% 89%;
+    --success-light: 120 40% 85%;
 
-    --warning: 48 96% 53%;
-    --warning-foreground: 0 0% 0%;
-    --warning-light: 48 100% 92%;
+    --warning: 45 85% 60%; /* Golden yellow */
+    --warning-foreground: 30 15% 15%;
+    --warning-light: 45 60% 90%;
 
-    --destructive: 0 84% 60%;
+    --destructive: 355 65% 55%; /* Deep rose */
     --destructive-foreground: 0 0% 100%;
-    --destructive-light: 0 100% 95%;
+    --destructive-light: 355 40% 90%;
 
-    --border: 214 32% 91%;
-    --input: 214 32% 91%;
-    --ring: 214 84% 26%;
+    --border: 35 15% 88%; /* Warm beige border */
+    --input: 35 15% 88%;
+    --ring: 15 60% 65%; /* Rose gold focus ring */
 
-    /* Assessment specific colors */
-    --compatibility-green: 142 71% 45%;
-    --compatibility-yellow: 48 96% 53%;
-    --compatibility-red: 0 84% 60%;
-    --compatibility-gray: 220 9% 46%;
+    /* Wedding Assessment Colors */
+    --compatibility-green: 120 60% 50%; /* Sage green */
+    --compatibility-yellow: 45 85% 60%; /* Golden yellow */
+    --compatibility-red: 355 65% 55%; /* Deep rose */
+    --compatibility-gray: 30 10% 50%;
 
-    /* Gradients */
-    --gradient-hero: linear-gradient(135deg, hsl(214 84% 26%), hsl(214 84% 35%));
-    --gradient-masculine: linear-gradient(135deg, hsl(220 84% 24%), hsl(214 84% 35%));
-    --gradient-feminine: linear-gradient(135deg, hsl(340 82% 52%), hsl(340 62% 65%));
-    --gradient-romantic: linear-gradient(135deg, hsl(220 84% 24%), hsl(340 82% 52%));
-    --gradient-card: linear-gradient(145deg, hsl(0 0% 100%), hsl(210 40% 98%));
-    --gradient-success: linear-gradient(135deg, hsl(142 71% 45%), hsl(142 71% 55%));
+    /* Wedding Theme Gradients */
+    --gradient-hero: linear-gradient(135deg, hsl(15 60% 65%), hsl(45 85% 75%)); /* Rose gold to champagne */
+    --gradient-masculine: linear-gradient(135deg, hsl(355 65% 35%), hsl(15 60% 65%)); /* Wine to rose gold */
+    --gradient-feminine: linear-gradient(135deg, hsl(25 45% 85%), hsl(45 85% 75%)); /* Champagne blush to gold */
+    --gradient-romantic: linear-gradient(135deg, hsl(355 65% 35%), hsl(25 45% 85%)); /* Wine to champagne */
+    --gradient-card: linear-gradient(145deg, hsl(0 0% 100%), hsl(35 20% 98%)); /* White to ivory */
+    --gradient-success: linear-gradient(135deg, hsl(120 60% 50%), hsl(120 60% 60%)); /* Sage gradient */
+    --gradient-wedding-lace: linear-gradient(45deg, hsl(0 0% 100% / 0.8), hsl(35 20% 98% / 0.8)); /* Lace pattern */
+    --gradient-pearl: linear-gradient(135deg, hsl(0 0% 100%), hsl(35 10% 95%), hsl(0 0% 100%)); /* Pearl shimmer */
 
-    /* Shadows */
-    --shadow-card: 0 4px 6px -1px hsl(214 32% 14% / 0.1), 0 2px 4px -1px hsl(214 32% 14% / 0.06);
-    --shadow-lg: 0 10px 15px -3px hsl(214 32% 14% / 0.1), 0 4px 6px -2px hsl(214 32% 14% / 0.05);
-    --shadow-glow: 0 0 0 1px hsl(214 84% 26% / 0.1), 0 1px 0 0 hsl(214 84% 26% / 0.1);
+    /* Wedding Theme Shadows */
+    --shadow-card: 0 4px 12px -2px hsl(30 15% 15% / 0.08), 0 2px 6px -1px hsl(30 15% 15% / 0.05);
+    --shadow-lg: 0 10px 25px -5px hsl(30 15% 15% / 0.1), 0 4px 10px -2px hsl(30 15% 15% / 0.05);
+    --shadow-glow: 0 0 0 1px hsl(15 60% 65% / 0.15), 0 2px 8px 0 hsl(15 60% 65% / 0.1);
+    --shadow-soft: 0 2px 8px -2px hsl(30 15% 15% / 0.06), 0 1px 4px -1px hsl(30 15% 15% / 0.04);
+    --shadow-romantic: 0 8px 24px -4px hsl(355 65% 35% / 0.12), 0 4px 12px -2px hsl(15 60% 65% / 0.08);
 
     --radius: 0.75rem;
 
@@ -142,10 +152,22 @@
 
   body {
     @apply bg-background text-foreground font-inter antialiased;
+    background-image: 
+      radial-gradient(circle at 20% 80%, hsl(25 45% 85% / 0.3) 0%, transparent 50%),
+      radial-gradient(circle at 80% 20%, hsl(15 60% 65% / 0.2) 0%, transparent 50%),
+      radial-gradient(circle at 40% 40%, hsl(45 85% 75% / 0.1) 0%, transparent 50%);
   }
 
   .font-inter {
     font-family: 'Inter', -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+  }
+
+  .font-playfair {
+    font-family: 'Playfair Display', serif;
+  }
+
+  .font-dancing {
+    font-family: 'Dancing Script', cursive;
   }
 }
 
@@ -170,6 +192,14 @@
     background: var(--gradient-card);
   }
 
+  .gradient-wedding-lace {
+    background: var(--gradient-wedding-lace);
+  }
+
+  .gradient-pearl {
+    background: var(--gradient-pearl);
+  }
+
   .shadow-card {
     box-shadow: var(--shadow-card);
   }
@@ -180,6 +210,39 @@
 
   .shadow-glow {
     box-shadow: var(--shadow-glow);
+  }
+
+  .shadow-soft {
+    box-shadow: var(--shadow-soft);
+  }
+
+  .shadow-romantic {
+    box-shadow: var(--shadow-romantic);
+  }
+
+  /* Wedding decorative elements */
+  .wedding-border {
+    border: 2px solid;
+    border-image: linear-gradient(45deg, hsl(15 60% 65%), hsl(45 85% 75%), hsl(15 60% 65%)) 1;
+  }
+
+  .heart-pattern::before {
+    content: '♥';
+    position: absolute;
+    top: -8px;
+    right: -8px;
+    color: hsl(15 60% 65%);
+    font-size: 1.2rem;
+    opacity: 0.6;
+  }
+
+  .rings-pattern::after {
+    content: '💍';
+    position: absolute;
+    bottom: -8px;
+    left: -8px;
+    font-size: 1rem;
+    opacity: 0.4;
   }
 
   .compatibility-green {

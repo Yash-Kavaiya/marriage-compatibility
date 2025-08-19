@@ -32,18 +32,21 @@ const RatingScale = ({
   color: string;
 }) => (
   <div className="space-y-3">
-    <h4 className="font-semibold text-lg text-foreground">{title}</h4>
+    <h4 className="font-semibold text-lg text-foreground font-playfair">{title}</h4>
     <div className="space-y-2">
       {labels.map((label, index) => (
         <button
           key={index}
           onClick={() => onChange(index + 1)}
-          className={`w-full p-3 text-left rounded-lg border-2 transition-all duration-200 ${
+          className={`w-full p-3 text-left rounded-lg border-2 transition-all duration-200 shadow-soft relative overflow-hidden ${
             value === index + 1
-              ? `bg-${color} border-${color} text-white shadow-md`
-              : 'bg-card border-border hover:border-primary hover:shadow-sm'
+              ? `bg-${color} border-${color} text-white shadow-romantic`
+              : 'gradient-pearl border-border hover:border-primary hover:shadow-soft'
           }`}
         >
+          {value === index + 1 && (
+            <div className="absolute top-1 right-1 text-xs opacity-50">✨</div>
+          )}
           <div className="flex items-center justify-between">
             <span className="font-medium">{index + 1}. {label}</span>
             <div className={`w-6 h-6 rounded-full border-2 ${
@@ -79,26 +82,30 @@ const QuestionCard = ({
   const bothAnswered = importanceValue > 0 && flexibilityValue > 0;
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-primary-lighter via-background to-accent p-4">
+    <div className="min-h-screen gradient-romantic p-4">
       <div className="max-w-4xl mx-auto">
         {/* Progress Header */}
         <div className="mb-8">
           <div className="text-center mb-4">
-            <h2 className="text-2xl font-bold text-primary mb-2">
+            <div className="mb-3 text-4xl opacity-60">💌</div>
+            <h2 className="text-2xl font-bold text-white mb-2 font-playfair">
               Question {currentQuestionIndex + 1} of {totalQuestions}
             </h2>
-            <p className="text-muted-foreground font-medium">{question.category}</p>
+            <p className="text-white/90 font-medium font-dancing text-lg">{question.category}</p>
           </div>
-          <Progress value={progressPercentage} className="h-3" />
-          <p className="text-sm text-muted-foreground text-center mt-2">
+          <div className="bg-white/20 rounded-full p-1">
+            <Progress value={progressPercentage} className="h-3" />
+          </div>
+          <p className="text-sm text-white/80 text-center mt-2">
             {Math.round(progressPercentage)}% Complete
           </p>
         </div>
 
         {/* Question Card */}
-        <Card className="shadow-lg mb-6">
+        <Card className="shadow-romantic gradient-pearl mb-6 relative overflow-hidden">
+          <div className="absolute top-4 right-4 text-3xl opacity-10">🌹</div>
           <CardHeader>
-            <CardTitle className="text-xl leading-relaxed">
+            <CardTitle className="text-xl leading-relaxed font-playfair">
               {question.question}
             </CardTitle>
             {question.explanation && (
@@ -129,12 +136,12 @@ const QuestionCard = ({
             </div>
 
             {/* Navigation */}
-            <div className="flex justify-between items-center mt-8 pt-6 border-t">
+            <div className="flex justify-between items-center mt-8 pt-6 border-t border-border/50">
               <Button
                 onClick={onPrevious}
                 disabled={!canGoPrevious}
                 variant="outline"
-                className="flex items-center gap-2"
+                className="flex items-center gap-2 shadow-soft"
               >
                 <ChevronLeft className="w-4 h-4" />
                 Previous
@@ -143,7 +150,7 @@ const QuestionCard = ({
               <div className="text-center">
                 {!bothAnswered && (
                   <p className="text-sm text-warning font-medium">
-                    Please answer both questions to continue
+                    Please answer both questions to continue ✨
                   </p>
                 )}
               </div>
@@ -151,11 +158,11 @@ const QuestionCard = ({
               <Button
                 onClick={onNext}
                 disabled={!bothAnswered}
-                className={`flex items-center gap-2 ${
+                className={`flex items-center gap-2 shadow-romantic ${
                   bothAnswered ? 'gradient-hero' : ''
                 }`}
               >
-                {currentQuestionIndex === totalQuestions - 1 ? 'Complete Assessment' : 'Next'}
+                {currentQuestionIndex === totalQuestions - 1 ? 'Complete Assessment 💕' : 'Next'}
                 <ChevronRight className="w-4 h-4" />
               </Button>
             </div>
