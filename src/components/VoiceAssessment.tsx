@@ -1,8 +1,7 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Mic, MicOff, Volume2, VolumeX, AlertTriangle } from "lucide-react";
-import { useSpeechSynthesis, useSpeechRecognition } from 'react-speech-kit';
 import { assessmentQuestions } from '@/data/assessmentQuestions';
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
@@ -22,54 +21,71 @@ const VoiceAssessment = ({ onComplete, onCancel, partnerType }: VoiceAssessmentP
   const [currentResponse, setCurrentResponse] = useState({ importance: 0, flexibility: 0 });
   const [permissionGranted, setPermissionGranted] = useState(false);
   const [isInitializing, setIsInitializing] = useState(true);
+  const [speaking, setSpeaking] = useState(false);
   const { toast } = useToast();
 
-  const { speak, cancel, speaking, supported: speechSupported } = useSpeechSynthesis({
-    onEnd: () => {
-      console.log('Speech synthesis ended');
-    },
-    onError: (error) => {
-      console.error('Speech synthesis error:', error);
-      toast({
-        title: "Speech Error",
-        description: "There was an issue with text-to-speech. Please try again.",
-        variant: "destructive",
-      });
-    }
-  });
-  
-  const { listen, listening, stop, supported: recognitionSupported } = useSpeechRecognition({
-    onResult: (result: string) => {
-      console.log('Voice recognition result:', result);
-      handleVoiceResult(result);
-    },
-    onError: (error) => {
-      console.error('Speech recognition error:', error);
-      toast({
-        title: "Voice Recognition Error",
-        description: "Could not understand your response. Please try speaking again.",
-        variant: "destructive",
-      });
-      setIsListening(false);
-    },
-    onEnd: () => {
-      console.log('Speech recognition ended');
-      setIsListening(false);
-    }
-  });
+  const recognitionRef = useRef<SpeechRecognition | null>(null);
+  const synthRef = useRef<SpeechSynthesis | null>(null);
 
   const currentQuestion = assessmentQuestions[currentQuestionIndex];
   const progress = ((currentQuestionIndex + 1) / assessmentQuestions.length) * 100;
 
   useEffect(() => {
     checkPermissionsAndInitialize();
+    
+    // Initialize speech synthesis
+    if ('speechSynthesis' in window) {
+      synthRef.current = window.speechSynthesis;
+    }
+
+    // Initialize speech recognition
+    if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
+      const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+      recognitionRef.current = new SpeechRecognition();
+      
+      if (recognitionRef.current) {
+        recognitionRef.current.continuous = false;
+        recognitionRef.current.interimResults = false;
+        recognitionRef.current.lang = 'en-US';
+        
+        recognitionRef.current.onresult = (event) => {
+          const result = event.results[0][0].transcript;
+          console.log('Voice recognition result:', result);
+          handleVoiceResult(result);
+        };
+        
+        recognitionRef.current.onerror = (error) => {
+          console.error('Speech recognition error:', error);
+          toast({
+            title: "Voice Recognition Error",
+            description: "Could not understand your response. Please try speaking again.",
+            variant: "destructive",
+          });
+          setIsListening(false);
+        };
+        
+        recognitionRef.current.onend = () => {
+          console.log('Speech recognition ended');
+          setIsListening(false);
+        };
+      }
+    }
+
+    return () => {
+      if (recognitionRef.current) {
+        recognitionRef.current.stop();
+      }
+      if (synthRef.current) {
+        synthRef.current.cancel();
+      }
+    };
   }, []);
 
   useEffect(() => {
-    if (speechSupported && currentQuestion && permissionGranted) {
+    if (synthRef.current && currentQuestion && permissionGranted) {
       speakQuestion();
     }
-  }, [currentQuestionIndex, speechSupported, permissionGranted]);
+  }, [currentQuestionIndex, permissionGranted]);
 
   const checkPermissionsAndInitialize = async () => {
     try {
@@ -117,10 +133,31 @@ const VoiceAssessment = ({ onComplete, onCancel, partnerType }: VoiceAssessmentP
     }
   };
 
+  const speak = (text: string) => {
+    if (!synthRef.current) return;
+    
+    synthRef.current.cancel();
+    const utterance = new SpeechSynthesisUtterance(text);
+    
+    utterance.onstart = () => setSpeaking(true);
+    utterance.onend = () => setSpeaking(false);
+    utterance.onerror = (error) => {
+      console.error('Speech synthesis error:', error);
+      setSpeaking(false);
+      toast({
+        title: "Speech Error",
+        description: "There was an issue with text-to-speech. Please try again.",
+        variant: "destructive",
+      });
+    };
+    
+    synthRef.current.speak(utterance);
+  };
+
   const speakQuestion = () => {
     if (currentMode === 'listening') {
       const questionText = `Question ${currentQuestionIndex + 1} of ${assessmentQuestions.length}. ${currentQuestion?.question}. Please rate how important this is to you from 1 to 5, where 1 is not important and 5 is extremely important.`;
-      speak({ text: questionText });
+      speak(questionText);
       setCurrentMode('importance');
     }
   };
@@ -132,15 +169,19 @@ const VoiceAssessment = ({ onComplete, onCancel, partnerType }: VoiceAssessmentP
       if (currentMode === 'importance') {
         setCurrentResponse(prev => ({ ...prev, importance: number }));
         setIsListening(false);
-        stop();
+        if (recognitionRef.current) {
+          recognitionRef.current.stop();
+        }
         
         const flexibilityText = `You rated importance as ${number}. Now, how much flexibility do you have on this topic? Rate from 1 to 5, where 1 is very flexible and 5 is non-negotiable.`;
-        speak({ text: flexibilityText });
+        speak(flexibilityText);
         setCurrentMode('flexibility');
         
         setTimeout(() => {
           setIsListening(true);
-          listen();
+          if (recognitionRef.current) {
+            recognitionRef.current.start();
+          }
         }, 3000);
         
       } else if (currentMode === 'flexibility') {
@@ -153,25 +194,27 @@ const VoiceAssessment = ({ onComplete, onCancel, partnerType }: VoiceAssessmentP
         setResponses(prev => [...prev, newResponse]);
         setCurrentResponse({ importance: 0, flexibility: 0 });
         setIsListening(false);
-        stop();
+        if (recognitionRef.current) {
+          recognitionRef.current.stop();
+        }
         
         if (currentQuestionIndex < assessmentQuestions.length - 1) {
           const nextText = `Thank you. Moving to the next question.`;
-          speak({ text: nextText });
+          speak(nextText);
           
           setTimeout(() => {
             setCurrentQuestionIndex(prev => prev + 1);
             setCurrentMode('listening');
           }, 2000);
         } else {
-          speak({ text: "Assessment complete! Thank you for your responses." });
+          speak("Assessment complete! Thank you for your responses.");
           setTimeout(() => {
             onComplete(responses.concat(newResponse));
           }, 2000);
         }
       }
     } else {
-      speak({ text: "Please say a number from 1 to 5." });
+      speak("Please say a number from 1 to 5.");
     }
   };
 
@@ -205,7 +248,9 @@ const VoiceAssessment = ({ onComplete, onCancel, partnerType }: VoiceAssessmentP
     
     try {
       setIsListening(true);
-      listen();
+      if (recognitionRef.current) {
+        recognitionRef.current.start();
+      }
     } catch (error) {
       console.error('Error starting speech recognition:', error);
       toast({
@@ -219,16 +264,24 @@ const VoiceAssessment = ({ onComplete, onCancel, partnerType }: VoiceAssessmentP
 
   const stopListening = () => {
     setIsListening(false);
-    stop();
+    if (recognitionRef.current) {
+      recognitionRef.current.stop();
+    }
   };
 
   const toggleSpeaking = () => {
     if (speaking) {
-      cancel();
+      if (synthRef.current) {
+        synthRef.current.cancel();
+      }
+      setSpeaking(false);
     } else {
       speakQuestion();
     }
   };
+
+  const speechSupported = 'speechSynthesis' in window;
+  const recognitionSupported = 'webkitSpeechRecognition' in window || 'SpeechRecognition' in window;
 
   if (isInitializing) {
     return (
@@ -360,7 +413,7 @@ const VoiceAssessment = ({ onComplete, onCancel, partnerType }: VoiceAssessmentP
             </Button>
           </div>
 
-          {listening && (
+          {isListening && (
             <div className="text-center">
               <div className="animate-pulse text-green-600">
                 🎤 Listening...
