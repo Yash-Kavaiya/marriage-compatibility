@@ -11,7 +11,7 @@
   
   <h3>🎯 A Modern Web Application for Couples to Assess Their Compatibility Before Marriage</h3>
   
-  [Live Demo](https://lovable.dev/projects/3acd99c3-d680-4dc3-bca4-795980f0aceb) • [Report Bug](https://github.com/Yash-Kavaiya/pre-marriage-compatibility/issues) • [Request Feature](https://github.com/Yash-Kavaiya/pre-marriage-compatibility/issues)
+Live Link :- https://marriage-compatibility.lovable.app/
 
 </div>
 
