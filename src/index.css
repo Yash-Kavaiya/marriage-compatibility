@@ -9,32 +9,32 @@
 
 @layer base {
   :root {
-    /* Elegant Wedding Color Palette */
+    /* Modern Purple Color Palette */
     --background: 0 0% 100%; /* Pure white */
-    --foreground: 215 25% 27%; /* Rich navy */
+    --foreground: 260 15% 25%; /* Deep purple-gray */
 
     --card: 0 0% 100%;
-    --card-foreground: 215 25% 27%;
+    --card-foreground: 260 15% 25%;
 
     --popover: 0 0% 100%;
-    --popover-foreground: 215 25% 27%;
+    --popover-foreground: 260 15% 25%;
 
-    /* Primary - Sophisticated Rose Gold */
-    --primary: 25 95% 53%; /* Vibrant rose gold */
+    /* Primary - Vibrant Purple */
+    --primary: 270 91% 65%; /* Vibrant purple */
     --primary-foreground: 0 0% 100%;
-    --primary-light: 25 100% 75%;
-    --primary-lighter: 25 100% 95%;
+    --primary-light: 270 100% 85%;
+    --primary-lighter: 270 100% 95%;
     
-    /* Masculine - Deep Navy */
-    --masculine: 215 25% 27%; /* Deep navy */
-    --masculine-light: 215 20% 85%;
+    /* Masculine - Deep Indigo */
+    --masculine: 240 60% 35%; /* Deep indigo */
+    --masculine-light: 240 30% 85%;
     --masculine-foreground: 0 0% 100%;
 
-    /* Feminine - Soft Blush */
-    --feminine: 340 35% 75%; /* Elegant blush */
-    --feminine-light: 340 25% 95%;
-    --feminine-foreground: 215 25% 27%;
-    --feminine-soft: 340 15% 98%;
+    /* Feminine - Soft Lavender */
+    --feminine: 300 40% 75%; /* Elegant lavender */
+    --feminine-light: 300 25% 95%;
+    --feminine-foreground: 260 15% 25%;
+    --feminine-soft: 300 15% 98%;
 
     --secondary: 220 13% 91%; /* Light grey */
     --secondary-foreground: 215 25% 27%;
@@ -42,7 +42,7 @@
     --muted: 210 40% 96%; /* Very light blue-grey */
     --muted-foreground: 215 16% 47%;
 
-    --accent: 45 93% 47%; /* Rich gold */
+    --accent: 285 85% 60%; /* Rich violet */
     --accent-foreground: 0 0% 100%;
 
     /* Premium Status Colors */
@@ -60,7 +60,7 @@
 
     --border: 220 13% 91%; /* Clean grey border */
     --input: 220 13% 91%;
-    --ring: 25 95% 53%; /* Rose gold focus ring */
+    --ring: 270 91% 65%; /* Purple focus ring */
 
     /* Assessment Result Colors */
     --compatibility-green: 142 69% 58%; /* Emerald */
@@ -68,23 +68,23 @@
     --compatibility-red: 0 84% 60%; /* Red */
     --compatibility-gray: 215 16% 47%;
 
-    /* Elegant Gradients */
-    --gradient-hero: linear-gradient(135deg, hsl(25 95% 53%) 0%, hsl(340 35% 75%) 50%, hsl(215 25% 27%) 100%); /* Rose gold to blush to navy */
-    --gradient-masculine: linear-gradient(135deg, hsl(215 25% 27%) 0%, hsl(25 95% 53%) 100%); /* Navy to rose gold */
-    --gradient-feminine: linear-gradient(135deg, hsl(340 35% 75%) 0%, hsl(25 100% 95%) 100%); /* Blush to light rose */
-    --gradient-romantic: linear-gradient(135deg, hsl(25 95% 53%) 0%, hsl(340 35% 75%) 100%); /* Rose gold to blush */
-    --gradient-card: linear-gradient(145deg, hsl(0 0% 100%) 0%, hsl(210 40% 98%) 100%); /* White to light blue */
+    /* Elegant Purple Gradients */
+    --gradient-hero: linear-gradient(135deg, hsl(270 91% 65%) 0%, hsl(300 40% 75%) 50%, hsl(240 60% 35%) 100%); /* Purple to lavender to indigo */
+    --gradient-masculine: linear-gradient(135deg, hsl(240 60% 35%) 0%, hsl(270 91% 65%) 100%); /* Indigo to purple */
+    --gradient-feminine: linear-gradient(135deg, hsl(300 40% 75%) 0%, hsl(270 100% 95%) 100%); /* Lavender to light purple */
+    --gradient-romantic: linear-gradient(135deg, hsl(270 91% 65%) 0%, hsl(300 40% 75%) 100%); /* Purple to lavender */
+    --gradient-card: linear-gradient(145deg, hsl(0 0% 100%) 0%, hsl(270 40% 98%) 100%); /* White to light purple */
     --gradient-success: linear-gradient(135deg, hsl(142 69% 58%) 0%, hsl(142 69% 65%) 100%);
-    --gradient-premium: linear-gradient(135deg, hsl(0 0% 100%) 0%, hsl(25 100% 98%) 50%, hsl(0 0% 100%) 100%); /* Premium white */
-    --gradient-overlay: linear-gradient(135deg, hsl(25 95% 53% / 0.1) 0%, hsl(340 35% 75% / 0.05) 100%);
+    --gradient-premium: linear-gradient(135deg, hsl(0 0% 100%) 0%, hsl(270 100% 98%) 50%, hsl(0 0% 100%) 100%); /* Premium white */
+    --gradient-overlay: linear-gradient(135deg, hsl(270 91% 65% / 0.1) 0%, hsl(300 40% 75% / 0.05) 100%);
 
-    /* Refined Shadows */
-    --shadow-card: 0 1px 3px 0 hsl(215 25% 27% / 0.05), 0 1px 2px 0 hsl(215 25% 27% / 0.06);
-    --shadow-lg: 0 10px 15px -3px hsl(215 25% 27% / 0.08), 0 4px 6px -2px hsl(215 25% 27% / 0.03);
-    --shadow-xl: 0 20px 25px -5px hsl(215 25% 27% / 0.08), 0 10px 10px -5px hsl(215 25% 27% / 0.02);
-    --shadow-premium: 0 8px 30px -12px hsl(25 95% 53% / 0.25), 0 2px 8px -2px hsl(215 25% 27% / 0.05);
-    --shadow-glow: 0 0 0 1px hsl(25 95% 53% / 0.2), 0 4px 16px 0 hsl(25 95% 53% / 0.1);
-    --shadow-soft: 0 2px 4px -1px hsl(215 25% 27% / 0.04), 0 1px 2px -1px hsl(215 25% 27% / 0.03);
+    /* Refined Purple Shadows */
+    --shadow-card: 0 1px 3px 0 hsl(260 15% 25% / 0.05), 0 1px 2px 0 hsl(260 15% 25% / 0.06);
+    --shadow-lg: 0 10px 15px -3px hsl(260 15% 25% / 0.08), 0 4px 6px -2px hsl(260 15% 25% / 0.03);
+    --shadow-xl: 0 20px 25px -5px hsl(260 15% 25% / 0.08), 0 10px 10px -5px hsl(260 15% 25% / 0.02);
+    --shadow-premium: 0 8px 30px -12px hsl(270 91% 65% / 0.25), 0 2px 8px -2px hsl(260 15% 25% / 0.05);
+    --shadow-glow: 0 0 0 1px hsl(270 91% 65% / 0.2), 0 4px 16px 0 hsl(270 91% 65% / 0.1);
+    --shadow-soft: 0 2px 4px -1px hsl(260 15% 25% / 0.04), 0 1px 2px -1px hsl(260 15% 25% / 0.03);
 
     --radius: 0.75rem;
 
@@ -154,9 +154,9 @@
   body {
     @apply bg-background text-foreground font-poppins antialiased;
     background: 
-      radial-gradient(ellipse at top, hsl(25 100% 98%) 0%, transparent 70%),
-      radial-gradient(ellipse at bottom right, hsl(340 25% 98%) 0%, transparent 70%),
-      linear-gradient(to bottom, hsl(0 0% 100%), hsl(210 40% 99%));
+      radial-gradient(ellipse at top, hsl(270 100% 98%) 0%, transparent 70%),
+      radial-gradient(ellipse at bottom right, hsl(300 25% 98%) 0%, transparent 70%),
+      linear-gradient(to bottom, hsl(0 0% 100%), hsl(270 40% 99%));
   }
 
   /* Typography Classes */
